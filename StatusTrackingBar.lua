@@ -85,8 +85,20 @@ function StatusBarMod:OnEnable()
 		self:RegisterEvent("PLAYER_ENTERING_WORLD", "ScheduleTrackingAnchors")
 		self:RegisterEvent("PLAYER_REGEN_ENABLED", "AnchorTrackingContainers")
 		self:RegisterEvent("UI_SCALE_CHANGED", "ScheduleTrackingAnchors")
+		self:RegisterEvent("UPDATE_SHAPESHIFT_FORM", "OnShapeshiftFormChanged")
 		self:ScheduleTrackingAnchors()
 	end
+end
+
+-- Blizzard can reset both tracking containers to MainActionBar on form changes.
+-- A short delay lets Blizzard finish its layout pass before we restore our anchors.
+-- Confirmed in-game on WoW Forever; retain the existing combat guard.
+function StatusBarMod:OnShapeshiftFormChanged()
+	C_Timer.After(0.1, function()
+		if self:IsEnabled() and self.bar and not InCombatLockdown() then
+			self:AnchorTrackingContainers()
+		end
+	end)
 end
 
 function StatusBarMod:ScheduleTrackingAnchors()
