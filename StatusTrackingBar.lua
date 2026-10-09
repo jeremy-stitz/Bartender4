@@ -78,7 +78,7 @@ function StatusBarMod:OnEnable()
 	self:ToggleOptions()
 	self:ApplyConfig()
 
-	if not Bartender4.GameType.Forever and EditModeManagerFrame and EditModeManagerFrame.UpdateBottomActionBarPositions then
+	if EditModeManagerFrame and EditModeManagerFrame.UpdateBottomActionBarPositions then
 		self:SecureHook(EditModeManagerFrame, "UpdateBottomActionBarPositions", "AnchorTrackingContainers")
 	end
 	if Bartender4.GameType.Forever then
